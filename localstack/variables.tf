@@ -10,3 +10,9 @@ variable "db_name" {
   type        = string
   default     = "garagedb"
 }
+
+variable "db_user" {
+  description = "Database master username"
+  type        = string
+  default     = "postgres"
+}
