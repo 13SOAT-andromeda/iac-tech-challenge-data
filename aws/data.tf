@@ -25,7 +25,7 @@ data "aws_security_group" "eks_cluster" {
     values = [data.aws_vpc.selected.id]
   }
   filter {
-    name   = "tag:Name"
+    name   = "group-name"
     values = ["eks-tech-challenge-cluster-sg"]
   }
 }
