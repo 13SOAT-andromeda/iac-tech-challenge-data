@@ -14,8 +14,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
-      - run: terraform fmt -check
-      - run: terraform validate
+      - name: Terraform Format
+        run: terraform fmt -check -recursive
+      - name: Terraform Init AWS
+        working-directory: aws
+        run: terraform init -backend=false
+      - name: Terraform Validate AWS
+        working-directory: aws
+        run: terraform validate
+      - name: Terraform Init LocalStack
+        working-directory: localstack
+        run: terraform init -backend=false
+      - name: Terraform Validate LocalStack
+        working-directory: localstack
+        run: terraform validate
 
   terraform-plan:
     name: "Terraform Plan"
@@ -29,13 +41,23 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
-      AWS_S3_TF_STATE_BUCKET_NAME: ${{ secrets.AWS_S3_TF_STATE_BUCKET_NAME }}
+      AWS_S3_TF_STATE_BUCKET_NAME: ${{ secrets.AWS_S3_TF_STATE_BUCKET_NAME }}-data
       TF_VAR_db_password: ${{ secrets.AWS_RDS_DB_PASSWORD }}
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
+      - name: Bootstrap S3 Backend
+        run: |
+          if ! aws s3 ls "s3://$AWS_S3_TF_STATE_BUCKET_NAME" > /dev/null 2>&1; then
+            echo "State Bucket does not exist. Creating..."
+            aws s3 mb s3://$AWS_S3_TF_STATE_BUCKET_NAME --region $AWS_REGION
+            echo "Waiting for bucket propagation..."
+            sleep 15
+          else
+            echo "State Bucket already exists."
+          fi
       - name: Terraform Init
-        run: terraform init -backend-config="bucket=$AWS_S3_TF_STATE_BUCKET_NAME"
+        run: terraform init -backend-config="bucket=$AWS_S3_TF_STATE_BUCKET_NAME" -backend-config="region=$AWS_REGION"
       - name: Terraform Plan
         run: terraform plan -no-color
 
@@ -51,12 +73,22 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
-      AWS_S3_TF_STATE_BUCKET_NAME: ${{ secrets.AWS_S3_TF_STATE_BUCKET_NAME }}
+      AWS_S3_TF_STATE_BUCKET_NAME: ${{ secrets.AWS_S3_TF_STATE_BUCKET_NAME }}-data
       TF_VAR_db_password: ${{ secrets.AWS_RDS_DB_PASSWORD }}
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
+      - name: Bootstrap S3 Backend
+        run: |
+          if ! aws s3 ls "s3://$AWS_S3_TF_STATE_BUCKET_NAME" > /dev/null 2>&1; then
+            echo "State Bucket does not exist. Creating..."
+            aws s3 mb s3://$AWS_S3_TF_STATE_BUCKET_NAME --region $AWS_REGION
+            echo "Waiting for bucket propagation..."
+            sleep 15
+          else
+            echo "State Bucket already exists."
+          fi
       - name: Terraform Init
-        run: terraform init -backend-config="bucket=$AWS_S3_TF_STATE_BUCKET_NAME"
+        run: terraform init -backend-config="bucket=$AWS_S3_TF_STATE_BUCKET_NAME" -backend-config="region=$AWS_REGION"
       - name: Terraform Apply
         run: terraform apply -auto-approve

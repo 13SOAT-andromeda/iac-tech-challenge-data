@@ -11,14 +11,14 @@ terraform {
     bucket = "tech-challenge-bucket-andromeda-local"
     key    = "tech-challenge-data-local/terraform.tfstate"
     region = "us-east-1"
-    
+
     # LocalStack specific backend settings
     endpoints = {
       s3  = "http://localhost:4566"
       iam = "http://localhost:4566"
       sts = "http://localhost:4566"
     }
-    
+
     access_key                  = "test"
     secret_key                  = "test"
     skip_credentials_validation = true
@@ -33,7 +33,7 @@ provider "aws" {
   region     = "us-east-1"
   access_key = "test"
   secret_key = "test"
-  
+
   # Optimization for LocalStack
   skip_credentials_validation = true
   skip_metadata_api_check     = true

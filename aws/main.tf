@@ -9,7 +9,6 @@ terraform {
 
   backend "s3" {
     key     = "tech-challenge-data/terraform.tfstate"
-    region  = "us-east-1"
     encrypt = true
   }
 }
