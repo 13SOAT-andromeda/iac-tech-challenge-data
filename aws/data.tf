@@ -6,15 +6,15 @@ data "aws_vpc" "selected" {
   }
 }
 
-# Find all Private Subnets for the DB Subnet Group
-data "aws_subnets" "private" {
+# Find all Public Subnets for the DB Subnet Group (Required for Public RDS)
+data "aws_subnets" "public" {
   filter {
     name   = "vpc-id"
     values = [data.aws_vpc.selected.id]
   }
   filter {
     name   = "tag:Name"
-    values = ["*-private-*"]
+    values = ["*-public-*"]
   }
 }
 

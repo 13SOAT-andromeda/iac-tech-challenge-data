@@ -28,7 +28,7 @@ module "rds" {
   source                = "../modules/rds"
   db_password           = var.db_password
   vpc_id                = data.aws_vpc.selected.id
-  subnet_ids            = data.aws_subnets.private.ids
+  subnet_ids            = data.aws_subnets.public.ids
   eks_security_group_id = data.aws_eks_cluster.main.vpc_config[0].cluster_security_group_id
 }
 
