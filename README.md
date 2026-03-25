@@ -1,54 +1,60 @@
 # IaC Tech Challenge - Data Layer
 
-Infrastructure as Code (IaC) for setting up the data layer, including RDS (PostgreSQL) and DynamoDB, supporting both standard AWS environments and local development via LocalStack.
+Este repositório contém a Infraestrutura como Código (IaC) responsável por provisionar a camada de dados do projeto. Ele configura os bancos de dados necessários, como o Amazon RDS (PostgreSQL) para dados relacionais e o Amazon DynamoDB para armazenamento de tokens de autenticação de usuários, suportando tanto ambientes AWS reais quanto desenvolvimento local via LocalStack.
 
-## Project Structure
+## 🛠 Tecnologias Utilizadas
 
-- `modules/`: Reusable Terraform modules.
-  - `rds/`: PostgreSQL database instance configuration.
-  - `dynamodb/`: DynamoDB table configuration for user authentication tokens.
-- `aws/`: Root configuration for deploying to a real AWS environment (configured for AWS Academy/Lab roles).
-- `localstack/`: Root configuration for local testing using LocalStack.
+- Terraform (v1.0+)
+- AWS CLI & AWS Provider
+- LocalStack (para desenvolvimento e testes locais)
+- Amazon RDS (PostgreSQL)
+- Amazon DynamoDB
 
-## Prerequisites
+## 🚀 Passos para Execução e Deploy
 
-- [Terraform](https://www.terraform.io/downloads.html) (v1.0+)
-- [LocalStack](https://localstack.cloud/) (for local development)
+### 1. Pré-requisitos
+Certifique-se de ter instalado em sua máquina:
+- [Terraform](https://developer.hashicorp.com/terraform/downloads)
 - [AWS CLI](https://aws.amazon.com/cli/)
+- [LocalStack](https://localstack.cloud/) (apenas para execução local)
 
-## Getting Started
+### 2. Execução Local (com LocalStack)
+Para testar a infraestrutura localmente sem gerar custos na AWS, siga os passos abaixo:
 
-### Local Development (LocalStack)
-
-1. Start LocalStack:
+1. Inicie o LocalStack em segundo plano:
    ```bash
    localstack start -d
    ```
-
-2. Initialize and apply:
+2. Acesse o diretório da configuração local:
    ```bash
    cd localstack
+   ```
+3. Inicialize o Terraform e aplique a infraestrutura:
+   ```bash
    terraform init
    terraform apply
    ```
 
-### AWS Deployment
+### 3. Deploy na AWS (Ambiente Real)
+Para provisionar os recursos diretamente na AWS (configurado para roles do AWS Academy/Lab):
 
-1. Ensure your AWS credentials are configured.
-2. Initialize and apply:
+1. Configure suas credenciais da AWS utilizando o AWS CLI.
+2. Acesse o diretório da configuração AWS:
    ```bash
    cd aws
+   ```
+3. Inicialize o Terraform e aplique as configurações:
+   ```bash
    terraform init
    terraform apply
    ```
 
-## Configuration
+*Nota: A infraestrutura de dados depende de uma rede existente (VPC e Subnets). O RDS é provisionado em subnets privadas, e o DynamoDB possui um Global Secondary Index configurado. O estado do Terraform é gerenciado via S3.*
 
-The data layer depends on an existing network infrastructure (VPC and Subnets).
-- **RDS:** Deployed in private subnets with access restricted to the EKS cluster security group.
-- **DynamoDB:** Configured with a Global Secondary Index for efficient user-based lookups.
+## 📐 Diagrama da Arquitetura
 
-### State Management
-Terraform state is stored in S3 with the following prefixes to avoid conflicts:
-- **AWS:** `tech-challenge-data/terraform.tfstate`
-- **LocalStack:** `tech-challenge-data-local/terraform.tfstate`
+![Arquitetura da Camada de Dados](.github/misc/database-architecture.png)
+
+## 📄 APIs (Swagger/Postman)
+
+- **Link para a documentação/collection:** *(em branco)*
