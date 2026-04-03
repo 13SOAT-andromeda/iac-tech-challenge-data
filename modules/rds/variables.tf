@@ -30,3 +30,9 @@ variable "eks_security_group_id" {
   description = "Security group ID of the EKS cluster to allow ingress"
   type        = string
 }
+
+variable "lambda_security_group_id" {
+  description = "Security group ID of the Lambda function to allow ingress"
+  type        = string
+  default     = ""
+}

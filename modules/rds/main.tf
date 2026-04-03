@@ -16,6 +16,14 @@ resource "aws_security_group" "rds" {
     security_groups = [var.eks_security_group_id]
   }
 
+  ingress {
+    description     = "Allow PostgreSQL traffic from Lambda"
+    from_port       = 5432
+    to_port         = 5432
+    protocol        = "tcp"
+    security_groups = var.lambda_security_group_id != "" ? [var.lambda_security_group_id] : []
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
