@@ -8,28 +8,51 @@ resource "aws_security_group" "rds" {
   description = "Security group for RDS instance"
   vpc_id      = var.vpc_id
 
-  ingress {
-    description     = "Allow PostgreSQL traffic from EKS"
-    from_port       = 5432
-    to_port         = 5432
-    protocol        = "tcp"
-    security_groups = [var.eks_security_group_id]
-  }
-
-  ingress {
-    description     = "Allow PostgreSQL traffic from Lambda"
-    from_port       = 5432
-    to_port         = 5432
-    protocol        = "tcp"
-    security_groups = var.lambda_security_group_id != "" ? [var.lambda_security_group_id] : []
-  }
-
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags = {
+    Name = "${var.db_name}-rds-sg"
+  }
+}
+
+resource "aws_security_group_rule" "eks_ingress" {
+  type                     = "ingress"
+  from_port                = 5432
+  to_port                  = 5432
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.rds.id
+  source_security_group_id = var.eks_security_group_id
+  description              = "Allow PostgreSQL traffic from EKS Cluster"
+}
+
+resource "aws_security_group_rule" "lambda_ingress" {
+  count                    = var.lambda_security_group_id != "" ? 1 : 0
+  type                     = "ingress"
+  from_port                = 5432
+  to_port                  = 5432
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.rds.id
+  source_security_group_id = var.lambda_security_group_id
+  description              = "Allow PostgreSQL traffic from Lambda"
+}
+
+data "aws_vpc" "this" {
+  id = var.vpc_id
+}
+
+resource "aws_security_group_rule" "vpc_ingress" {
+  type              = "ingress"
+  from_port         = 5432
+  to_port           = 5432
+  protocol          = "tcp"
+  security_group_id = aws_security_group.rds.id
+  cidr_blocks       = [data.aws_vpc.this.cidr_block]
+  description       = "Allow internal VPC traffic to RDS (Required for EKS Nodes and Lambda)"
 }
 
 resource "aws_db_instance" "main" {
