@@ -12,7 +12,6 @@ terraform {
     key    = "tech-challenge-data-local/terraform.tfstate"
     region = "us-east-1"
 
-    # LocalStack specific backend settings
     endpoints = {
       s3  = "http://localhost:4566"
       iam = "http://localhost:4566"
@@ -34,13 +33,11 @@ provider "aws" {
   access_key = "test"
   secret_key = "test"
 
-  # Optimization for LocalStack
   skip_credentials_validation = true
   skip_metadata_api_check     = true
   skip_requesting_account_id  = false
   s3_use_path_style           = true
 
-  # Only necessary endpoints for the data layer
   endpoints {
     ec2      = "http://localhost:4566"
     rds      = "http://localhost:4566"
