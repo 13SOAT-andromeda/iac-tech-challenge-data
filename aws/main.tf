@@ -32,6 +32,16 @@ module "rds" {
   eks_security_group_id = data.aws_security_group.eks_cluster.id
 }
 
+module "catalog_database" {
+  source                = "../modules/rds"
+  db_name               = var.catalog_db_name
+  db_user               = var.db_user
+  db_password           = var.db_password
+  vpc_id                = data.aws_vpc.selected.id
+  subnet_ids            = data.aws_subnets.private.ids
+  eks_security_group_id = data.aws_security_group.eks_cluster.id
+}
+
 module "dynamodb" {
   source     = "../modules/dynamodb"
   table_name = "user-authentication-token"

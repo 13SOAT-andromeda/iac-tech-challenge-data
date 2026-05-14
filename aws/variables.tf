@@ -9,3 +9,15 @@ variable "db_name" {
   type        = string
   default     = "garagedb"
 }
+
+variable "db_user" {
+  description = "Database master username"
+  type        = string
+  default     = "postgres"
+}
+
+variable "catalog_db_name" {
+  description = "Database name for Catalog API"
+  type        = string
+  default     = "catalog_db"
+}
