@@ -13,6 +13,11 @@ output "payments_database_endpoint" {
   value       = module.payments_database.db_instance_endpoint
 }
 
+output "users_database_endpoint" {
+  description = "The endpoint of the users RDS instance"
+  value       = module.users_database.db_instance_endpoint
+}
+
 output "dynamodb_table_arn" {
   description = "The ARN of the DynamoDB table"
   value       = module.dynamodb.table_arn

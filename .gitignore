@@ -22,3 +22,5 @@ terraform.tfvars.json
 condutor/
 openspec/
 .claude/
+
+/.idea/

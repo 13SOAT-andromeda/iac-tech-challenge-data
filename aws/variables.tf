@@ -27,3 +27,9 @@ variable "payments_db_name" {
   type        = string
   default     = "paymentsdb"
 }
+
+variable "users_db_name" {
+  description = "Database name for Users API"
+  type        = string
+  default     = "usersdb"
+}
