@@ -55,6 +55,3 @@ Para provisionar os recursos diretamente na AWS (configurado para roles do AWS A
 
 ![Arquitetura da Camada de Dados](.github/misc/database-architecture.png)
 
-## 📄 APIs (Swagger/Postman)
-
-- **Link para a documentação/collection:** *(em branco)*
