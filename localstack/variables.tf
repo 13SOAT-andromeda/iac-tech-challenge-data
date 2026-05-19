@@ -16,3 +16,15 @@ variable "db_user" {
   type        = string
   default     = "postgres"
 }
+
+variable "catalog_db_name" {
+  description = "Database name for Catalog API"
+  type        = string
+  default     = "catalog_db"
+}
+
+variable "payments_db_name" {
+  description = "Database name for Payments API"
+  type        = string
+  default     = "payments_db"
+}
