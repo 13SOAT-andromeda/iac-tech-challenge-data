@@ -19,11 +19,11 @@ variable "db_user" {
 variable "catalog_db_name" {
   description = "Database name for Catalog API"
   type        = string
-  default     = "catalog_db"
+  default     = "catalogdb"
 }
 
 variable "payments_db_name" {
   description = "Database name for Payments API"
   type        = string
-  default     = "payments_db"
+  default     = "paymentsdb"
 }
